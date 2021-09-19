@@ -1,58 +1,143 @@
-import React from 'react';
-import logo from './logo.svg';
-import { Counter } from './features/counter/Counter';
-import './App.css';
+import { useState, useEffect } from "react";
+import axios from "axios";
+import "./App.css";
+import { useSelector, useDispatch } from "react-redux";
+import {
+  loadingState,
+  errorState,
+  toggleLoading,
+  toggleError,
+} from "./redux/dataSlice";
 
-function App() {
+//components import
+import Loading from "./components/loading";
+import FourZeroFour from "./components/404";
+import Card from "./components/card";
+
+//custom hooks import
+import { useDebounce } from "./components/hooks";
+
+const baseURL = "https://api.opendota.com";
+
+const App = () => {
+  const [heroes, setHeroes] = useState([]);
+  const [heroesTop10, setHeroesTop10] = useState([]);
+  const [filteredHeroes, setFilteredHeroes] = useState([]);
+  const [input, setInput] = useState("");
+  const dispatch = useDispatch();
+  const loading = useSelector(loadingState);
+  const error = useSelector(errorState);
+
+  //hooks
+  let debounced = useDebounce(input, 800);
+
+  // if debouced value change, filter heroes list
+  useEffect(() => {
+    if (debounced !== "") {
+      let result = heroes.filter((hero) => {
+        return hero.name.includes(debounced);
+      });
+      if (result.length > 0) {
+        setFilteredHeroes(result);
+      } else {
+        alert("No Hero Found");
+      }
+    }
+  }, [debounced]);
+
+  // get top 10 pro win rates
+  const getHeroFunc = async () => {
+    try {
+      dispatch(toggleLoading(true));
+      let getHero = await axios.get(`${baseURL}/api/heroStats`);
+      if (getHero && getHero.data) {
+        let heroData = getHero.data;
+        let sortedHeroData = heroData.sort((a, b) => {
+          // get win rates
+          let aRates = Number(((a.pro_win / a.pro_pick) * 100).toFixed(2));
+          let bRates = Number(((b.pro_win / b.pro_pick) * 100).toFixed(2));
+          return bRates - aRates;
+        });
+        dispatch(toggleLoading(false));
+        setHeroes(sortedHeroData);
+        setHeroesTop10(sortedHeroData.slice(0, 10));
+      } else {
+        dispatch(toggleLoading(false));
+        dispatch(toggleError(true));
+      }
+    } catch (error) {
+      dispatch(toggleLoading(false));
+      dispatch(toggleError(true));
+      console.log(error.message);
+    }
+  };
+
+  useEffect(() => {
+    getHeroFunc();
+  }, []);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <Counter />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <span>
-          <span>Learn </span>
-          <a
-            className="App-link"
-            href="https://reactjs.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            React
-          </a>
-          <span>, </span>
-          <a
-            className="App-link"
-            href="https://redux.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Redux
-          </a>
-          <span>, </span>
-          <a
-            className="App-link"
-            href="https://redux-toolkit.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Redux Toolkit
-          </a>
-          ,<span> and </span>
-          <a
-            className="App-link"
-            href="https://react-redux.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            React Redux
-          </a>
-        </span>
-      </header>
-    </div>
+    <>
+      {error ? (
+        <FourZeroFour />
+      ) : loading ? (
+        <Loading />
+      ) : (
+        <div
+          style={{
+            padding: "1rem 1rem 5rem 1rem",
+            maxWidth: "1500px",
+            margin: "0 auto",
+          }}
+        >
+          <div className="scantist_main_title">
+            <h1>Dota Heroes Stats</h1>
+            <p>
+              Data from{" "}
+              <a
+                href="https://docs.opendota.com/#tag/hero-stats"
+                target="_blank"
+                rel="noreferrer"
+              >
+                https://docs.opendota.com/#tag/hero-stats
+              </a>
+            </p>
+          </div>
+          <div className="scantist_search">
+            <input
+              type="text"
+              onChange={(e) => setInput(e.target.value)}
+              value={input}
+              placeholder="Search by name.."
+            />
+          </div>
+          <div>
+            <div>
+              <div className="scantist_section_title">
+                <h2>Top 10 Pro Win Heros</h2>
+              </div>
+              <div
+                style={{
+                  display: "flex",
+                  flexWrap: "wrap",
+                  margin: "-0.5rem",
+                }}
+              >
+                {filteredHeroes.length > 0 && debounced !== ""
+                  ? filteredHeroes.map((hero, index) => {
+                      return <Card key={index} hero={hero} baseURL={baseURL} />;
+                    })
+                  : heroesTop10 &&
+                    heroesTop10.map((hero, index) => {
+                      return <Card key={index} hero={hero} baseURL={baseURL} />;
+                    })}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
   );
-}
+};
 
 export default App;
