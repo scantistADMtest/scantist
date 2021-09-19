@@ -115,7 +115,11 @@ const App = () => {
           <div>
             <div>
               <div className="scantist_section_title">
-                <h2>Top 10 Pro Win Heros</h2>
+                <h2>
+                  {filteredHeroes.length > 0 && debounced !== ""
+                    ? `Search Results (${filteredHeroes.length})`
+                    : "Top 10 Pro Win Heros"}
+                </h2>
               </div>
               <div
                 style={{
