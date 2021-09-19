@@ -58,6 +58,7 @@ const App = () => {
           let bRates = Number(((b.pro_win / b.pro_pick) * 100).toFixed(2));
           return bRates - aRates;
         });
+
         dispatch(toggleLoading(false));
         setHeroes(sortedHeroData);
         setHeroesTop10(sortedHeroData.slice(0, 10));

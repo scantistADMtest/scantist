@@ -8,7 +8,7 @@ const Card = (props) => {
         <div className="scantist_card_img">
           <img
             src={`${baseURL}${hero.img}`}
-            alt={`${hero.name}`}
+            alt={`${hero.localized_name}`}
             onError={(e) => {
               e.target.onerror = null;
               e.target.src = "https://via.placeholder.com/252x142/09f/fff.png";
@@ -17,7 +17,7 @@ const Card = (props) => {
         </div>
         <div className="scantist_card_details">
           <div className="scantist_card_details--title">
-            <h4>{hero.name}</h4>
+            <h4>{hero.localized_name}</h4>
           </div>
           <div className="divider"></div>
           <div className="scantist_card_details--counts">
