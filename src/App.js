@@ -35,7 +35,8 @@ const App = () => {
   useEffect(() => {
     if (debounced !== "") {
       let result = heroes.filter((hero) => {
-        return hero.name.includes(debounced);
+        let name = hero.localized_name.toLowerCase();
+        return name.includes(debounced);
       });
       if (result.length > 0) {
         setFilteredHeroes(result);
