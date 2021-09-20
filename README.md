@@ -1,12 +1,13 @@
 url: https://scantist-christopherkek.vercel.app/
 
 
-![screencapture-scantist](https://user-images.githubusercontent.com/64301114/133920556-7d318b7a-cfae-40c0-8468-5757a2b78f0a.png)
+![screencapture-scantist-2](https://user-images.githubusercontent.com/64301114/133970478-82e3e35f-acfc-439f-8af3-2e48426bb368.png)
 
 
 **Summary**
  * Display Dota2 Heroes with top 10 pro win rates and their stats by default.
  * Search funtions to filter heroes list by input.
+ * Display chart for top 10 pro win heroes pick number.
  * Handle loading state.
  * Handle fetch error.
  * Responsive layout
