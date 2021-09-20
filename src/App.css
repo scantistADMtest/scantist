@@ -137,3 +137,21 @@ h4 {
   background-color: white;
   outline: none;
 }
+
+/* d3 chart */
+#d3chart {
+  width: 100%;
+  height: 50vh;
+}
+
+#d3chart .domain {
+  stroke: #9b9b9b !important;
+}
+#d3chart .tick line {
+  stroke: #9b9b9b !important;
+}
+
+.gridline {
+  shape-rendering: crispEdges;
+  stroke-opacity: 0.5;
+}

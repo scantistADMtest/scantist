@@ -16,6 +16,7 @@ import Card from "./components/card";
 
 //custom hooks import
 import { useDebounce } from "./components/hooks";
+import { Chart } from "./chart";
 
 const baseURL = "https://api.opendota.com";
 
@@ -140,6 +141,17 @@ const App = () => {
               </div>
             </div>
           </div>
+          {filteredHeroes.length > 0 && debounced !== "" ? null : (
+            <div>
+              <div
+                className="scantist_section_title"
+                style={{ marginTop: "3rem" }}
+              >
+                <h2>Top 10 Pro Win Heros's pick graph</h2>
+              </div>
+              <Chart data={heroesTop10} />
+            </div>
+          )}
         </div>
       )}
     </>
