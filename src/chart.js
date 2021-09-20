@@ -79,11 +79,10 @@ export const Chart = (props) => {
         .attr("transform", "translate(0," + chartheight + ")")
         .selectAll("text")
         .style("text-anchor", "end")
-        .attr("dx", "-0.75rem")
         .attr("dy", "0.25rem")
-        .attr("transform", "rotate(-65)")
+        .attr("transform", "rotate(-35)")
         .style("color", "#1c1c1c")
-        .style("font-size", "0.75rem")
+        .style("font-size", "0.65rem")
         .style("font-weight", "600");
     } else {
       svg
